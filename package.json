@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "no-frameworks",
+  "version": "0.0.0",
+  "description": "An example project for the technical article \"Building A Node.js Server Without Frameworks\"",
+  "config": {
+    "port": "8080",
+    "host": "localhost"
+  },
+  "scripts": {
+    "test": "mocha test/test-*.js",
+    "start": "node start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jxson/no-frameworks.git"
+  },
+  "author": "Jason Camppbell <jason@js.la> (http://artifact.sh)",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "e80bac94d6c8cd8b29f993ea55373a07d6a8306a",
+  "bugs": {
+    "url": "https://github.com/jxson/no-frameworks/issues"
+  }
+}
