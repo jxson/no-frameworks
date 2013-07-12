@@ -1,8 +1,8 @@
 
 var http = require('http')
+  , listener = require('./request-listener')
+  , server = http.createServer(listener)
+  , port = process.env.PORT || 8080
+  , host = process.env.HOST
 
-module.exports = http.createServer(handler)
-
-function handler(req, res){
-  res.end('HI')
-}
+server.listen(port, host)
