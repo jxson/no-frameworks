@@ -1,20 +1,38 @@
 
-// uncaught error stuff
-
 var http = require('http')
   , listener = require('./request-listener')
-  , server = http.createServer(listener)
+  , domain = require('domain')
   , bunyan = require('bunyan')
+  , logptions = { name: 'no-frameworks'
+    , level: process.env.LOG_LEVEL || 'info'
+    , serializers: bunyan.stdSerializers
+    }
+  , logger = bunyan.createLogger(logptions)
 
-// decorates the server with the buyan logger
-// this makes it nice to adjust log levels dynamically like in the tests
-server.logger = bunyan.createLogger({ name: 'no-frameworks'
-, level: process.env.LOG_LEVEL || 'info'
-, serializers: { req: bunyan.stdSerializers.req
-  , res: bunyan.stdSerializers.res
-  , err: bunyan.stdSerializers.err
-  , error: bunyan.stdSerializers.err
-  }
+// creates the server, adds a domain to the req, res then passes them the the
+// req-listener
+server = http.createServer(function(req, res){
+  var d = domain.create()
+    , server = this
+
+  d.on('error', function(err){
+    // this is a good place to log uncaught errors to a service like sentry or
+    // bugsense
+    throw err
+  })
+
+  d.add(req)
+  d.add(res)
+
+  d.run(function(){
+    // makes sure the listener this is scoped to the server
+    listener.call(server, req, res)
+    // throw new Error('WTF')
+  })
 })
+
+// decorates the server with the logger this makes it nice to adjust log
+// levels dynamically from other modules (like in the tests)
+server.logger = logger
 
 module.exports = server
