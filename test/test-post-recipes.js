@@ -16,5 +16,11 @@ describe('POST /recipes', function(){
     .expect(201, done)
   })
 
-  it('successfully handles form data')
+  it('successfully handles form data', function(done){
+    request(server)
+    .post('/recipes')
+    .send({ title: 'Tamales' })
+    .type('application/x-www-form-urlencoded')
+    .expect(201, done)
+  })
 })
