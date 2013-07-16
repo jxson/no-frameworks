@@ -24,6 +24,15 @@
   },
   "dependencies": {
     "bunyan": "~0.21.4",
-    "error-page": "0.0.6"
+    "error-page": "0.0.6",
+    "routes": "~0.2.0",
+    "beardo": "0.0.10",
+    "negotiator": "~0.2.6",
+    "mime": "~1.2.9"
+  },
+  "devDependencies": {
+    "cheerio": "~0.12.0",
+    "supertest": "~0.7.1",
+    "mocha": "~1.12.0"
   }
 }

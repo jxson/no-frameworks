@@ -31,7 +31,7 @@ server = http.createServer(function(req, res){
   })
 })
 
-// decorates the server with the logger this makes it nice to adjust log
+// decorates the server with the logger this makes it easy to adjust log
 // levels dynamically from other modules (like in the tests)
 server.logger = logger
 

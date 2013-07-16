@@ -19,11 +19,43 @@ function listener(req, res){
 
   var EP = require('error-page')
     , erropts = { 404: 'not found'
+      , 415: 'unsupported media type'
+      , 402: 'https://vimeo.com/22053820'
       , '*': error
       , log: function(){} // the error-page logger is kinda useless, noop it.
       }
 
   res.error = EP(req, res, erropts)
+
+  var path = require('path')
+    , beardo = require('beardo')
+    , beardopts = { directory: path.resolve(__dirname, 'templates') }
+
+  res.template = beardo.handler(req, res, beardopts)
+
+  req.is = function(type){
+    // http://www.w3.org/Protocols/rfc2616/rfc2616.txt section 7.2.1
+    var ct = req.headers['content-type'] || 'application/octet-stream'
+      , mime = require('mime')
+      , index = ct.indexOf(';')
+
+    if (index > -1) ct = ct.substring(0, index)
+
+    mime.define({
+      'application/x-www-form-urlencoded': [ 'form' ]
+    })
+
+    return mime.lookup(type) === ct
+  }
+
+  req.wants = function(type){
+    var Negotiator = require('negotiator')
+      , mime = require('mime')
+      , negotiator = new Negotiator(req)
+      , types = negotiator.preferredMediaTypes() || []
+
+    return types[0] === mime.lookup(type)
+  }
 
   res.json = function(json, status, headers){
     var data = JSON.stringify(json)
@@ -44,14 +76,27 @@ function listener(req, res){
 
     res.statusCode = status
 
-    for (var key in Object.keys(headers)) { res.setHeader(key, headers[key]) }
+    Object.keys(headers).forEach(function(key){
+      res.setHeader(key, headers[key])
+    })
 
     res.setHeader('content-length', data.length)
     res.end(data)
   }
 
-  // res.end('YEYA')
-  // res.error(new Error('AHHHHH'))
+  // the last thing is to send the decorated req, res objects to the proper
+  //routes
+  var url = require('url')
+    , pathname = url.parse(req.url).pathname
+    , router = require('./router')
+    , route = router.match(pathname)
+
+  // Merge the route's keys to the request object
+  if (route) Object.keys(route).forEach(function(k){ req[k] = route[k] })
+
+  // has route?
+  if (!route) return res.error(404)
+  else return route.fn(req, res)
 }
 
 // the default error handler passed to error-page
