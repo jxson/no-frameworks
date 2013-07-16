@@ -3,10 +3,6 @@
   "name": "no-frameworks",
   "version": "0.0.0",
   "description": "An example project for the technical article \"Building A Node.js Server Without Frameworks\"",
-  "config": {
-    "port": "8080",
-    "host": "localhost"
-  },
   "scripts": {
     "test": "mocha test/test-*.js",
     "start": "node lib/start.js"
