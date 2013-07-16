@@ -28,7 +28,13 @@
     "routes": "~0.2.0",
     "beardo": "0.0.10",
     "negotiator": "~0.2.6",
-    "mime": "~1.2.9"
+    "mime": "~1.2.9",
+    "domready": "~0.2.12",
+    "browserify": "~2.25.0",
+    "through": "~2.3.4",
+    "drag-stream": "0.0.3",
+    "oppressor": "0.0.1",
+    "rework": "~0.17.2"
   },
   "devDependencies": {
     "cheerio": "~0.12.0",
