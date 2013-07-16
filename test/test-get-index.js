@@ -1,6 +1,6 @@
 
 var request = require('supertest')
-  , server = require('../server')
+  , server = require('../lib/server')
   , cheerio = require('cheerio')
   , assert = require('assert')
 
